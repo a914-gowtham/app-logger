@@ -26,8 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="0 entries"
-                android:textColor="@color/black" />
+                android:text="0 entries"/>
 
 
             <View
@@ -41,16 +40,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="Save file"
-                android:textColor="@color/black" />
+                android:text="Save file" />
 
             <TextView
                 android:id="@+id/txt_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="@string/clear"
-                android:textColor="@color/black" />
+                android:text="@string/clear" />
 
         </LinearLayout>
 
