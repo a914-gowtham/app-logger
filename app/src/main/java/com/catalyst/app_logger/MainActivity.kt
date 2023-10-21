@@ -1,6 +1,8 @@
 package com.catalyst.app_logger
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -33,8 +35,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnILog.setOnClickListener(this)
         btnELog.setOnClickListener(this)
         btnShowLog.setOnClickListener(this)
-
+//        handler.postDelayed(runnable,1000)
     }
+
+    private val runnable= Runnable {
+        AppLogger.writeLog(this@MainActivity, "Navigation screen verbose" +
+                "log time ${System.currentTimeMillis()}")
+        AppLogger.writeILog(this@MainActivity, "Navigation screen " +
+                "log time ${System.currentTimeMillis()}")
+        postRun()
+    }
+
+    fun postRun(){
+        handler.removeCallbacks(runnable)
+        handler.postDelayed(runnable,1000)
+    }
+
+    val handler= Handler(Looper.getMainLooper())
 
     override fun onClick(v: View?) {
 
@@ -60,5 +77,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(runnable)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        handler.postDelayed(runnable,100)
     }
 }
