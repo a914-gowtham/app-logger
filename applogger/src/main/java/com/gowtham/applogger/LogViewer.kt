@@ -267,8 +267,8 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
             val logs = getChunkedList()
             withContext(Dispatchers.Main) {
                 logAdapter.submitLogList(logs)
-                delay(50)
                 handleEmptyState(logs)
+                delay(50)
                 scrollToEnd()
             }
         }
