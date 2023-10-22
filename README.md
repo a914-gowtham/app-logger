@@ -6,7 +6,7 @@ Remove the library usage before publishing on playstore. Its main purpose is to 
 
 [![](https://jitpack.io/v/a914-gowtham/app-logger.svg)](https://jitpack.io/#a914-gowtham/app-logger)
 
-<img src="https://github.com/a914-gowtham/app-logger/blob/master/demo_opt.gif" width="40%" height="40%"/>
+<img src="https://github.com/a914-gowtham/app-logger/blob/master/demo_opt.gif" />
 
 Download
 --------
