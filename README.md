@@ -2,7 +2,7 @@
 
 It is a logging library that stores logs locally on the android device. I created this library as an alternate for server logging to debug issues. it helped to fix some specific issues that only happened in release build where i did not have access to server logging.
 
-Remove the library usage before publishing on playstore. it's main purpose is to log locally and sharing the log file. 
+Remove the library usage before publishing on playstore. Its main purpose is to debug specific issues and share the log file. 
 
 [![](https://jitpack.io/v/a914-gowtham/app-logger.svg)](https://jitpack.io/#a914-gowtham/app-logger)
 
