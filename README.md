@@ -1,6 +1,6 @@
 # app-logger
 
-It is a logging library that stores logs locally in the android device. I created this library, so i can debug issues without using any kind of server logs. it helped to fix some specific issues that only happened in release build.
+It is a logging library that stores logs locally in the android device. I created this library to debug issues without using any kind of server logs. it helped to fix some specific issues that only happened in release build.
 
 Remove the library usage before publishing on playstore. it's main purpose is to log locally and sharing the log file. 
 
