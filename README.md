@@ -8,6 +8,9 @@ Remove the library usage before publishing on playstore. Its main purpose is to 
 
 <img src="https://github.com/a914-gowtham/app-logger/blob/master/demo_opt.gif" />
 
+
+<img src="https://github.com/a914-gowtham/app-logger/blob/master/demo_opt_2.gif" />
+
 Download
 --------
 
