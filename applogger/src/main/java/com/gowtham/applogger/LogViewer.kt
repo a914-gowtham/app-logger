@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -177,6 +178,10 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
         imageScrollBtm.setOnClickListener {
             scrollToEnd()
         }
+    }
+
+    fun openSheet(fragmentManager: FragmentManager, tag: String){
+        show(fragmentManager, tag)
     }
 
     private fun scrollToEnd() {

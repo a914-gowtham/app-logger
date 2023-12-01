@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btnShowLogs -> {
-                val logViewer = LogViewer(false)
+                val logViewer = LogViewer(liveLog = false)
                 logViewer.show(supportFragmentManager, LogViewer.TAG)
             }
         }
