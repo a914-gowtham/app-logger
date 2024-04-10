@@ -185,10 +185,10 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
     }
 
     private fun scrollToEnd() {
-        listLog.scrollToPosition(logAdapter.currentList.lastIndex)
         if (liveLog) {
             postCall()
         }
+        listLog.scrollToPosition(logAdapter.currentList.lastIndex)
     }
 
     private val requestPermissionLauncher =
