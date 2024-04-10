@@ -15,7 +15,7 @@ object AdapterUtil {
 
         for (i in logs.indices) {
             val item= logs.get(i)
-            if (item.isNotEmpty()) {
+            if (item.isNotBlank()) {
                 val span = SpannableString(item)
                 span.setSpan(
                     ForegroundColorSpan(getSpanColor(item)),
