@@ -21,10 +21,12 @@ object AppLogger {
 
     private val loggerScope = CoroutineScope(Dispatchers.IO)
 
-    private var maxSize: Int = 10
+    private var maxSize: Int = 5
 
     private val _logFlow = MutableStateFlow("")
     val logFlow: StateFlow<String> = _logFlow
+    private var logFile: File? = null
+
 
     @JvmStatic
     fun setMaxFileSize(sizeInMB: Int) {
@@ -34,23 +36,30 @@ object AppLogger {
     @JvmStatic
     fun writeLog(context: Context, msg: String) {
         checkMaxFile(context)
-        val file = File(context.filesDir, "app-log.txt")
         if (msg.isNotEmpty()) {
             loggerScope.launch {
                 _logFlow.value= msg
-                file.appendText(formatter.format(Date()) + ": $msg" + "\n")
+                getLogFile(context).appendText(formatter.format(Date()) + ": $msg" + "\n")
             }
+        }
+    }
+
+    private fun getLogFile(context: Context): File {
+        synchronized(this){
+            if(logFile==null){
+                logFile= File(context.filesDir, "app-log.txt")
+            }
+            return logFile!!
         }
     }
 
     @JvmStatic
     fun writeWLog(context: Context, msg: String) {
         checkMaxFile(context)
-        val file = File(context.filesDir, "app-log.txt")
         if (msg.isNotEmpty()) {
             loggerScope.launch {
                 _logFlow.value= msg
-                file.appendText(formatter.format(Date()) + ":${LogLevel.WARN.value} $msg" + "\n")
+                getLogFile(context).appendText(formatter.format(Date()) + ":${LogLevel.WARN.value} $msg" + "\n")
             }
         }
     }
@@ -58,11 +67,10 @@ object AppLogger {
     @JvmStatic
     fun writeDLog(context: Context, msg: String) {
         checkMaxFile(context)
-        val file = File(context.filesDir, "app-log.txt")
         if (msg.isNotEmpty()) {
             loggerScope.launch {
                 _logFlow.value= msg
-                file.appendText(formatter.format(Date()) + ":${LogLevel.DEBUG.value} $msg" + "\n")
+                getLogFile(context).appendText(formatter.format(Date()) + ":${LogLevel.DEBUG.value} $msg" + "\n")
             }
         }
     }
@@ -70,11 +78,10 @@ object AppLogger {
     @JvmStatic
     fun writeELog(context: Context, msg: String) {
         checkMaxFile(context)
-        val file = File(context.filesDir, "app-log.txt")
         if (msg.isNotEmpty()) {
             loggerScope.launch {
                 _logFlow.value= msg
-                file.appendText(formatter.format(Date()) + ":${LogLevel.ERROR.value} $msg" + "\n")
+                getLogFile(context).appendText(formatter.format(Date()) + ":${LogLevel.ERROR.value} $msg" + "\n")
             }
         }
     }
@@ -82,11 +89,10 @@ object AppLogger {
     @JvmStatic
     fun writeILog(context: Context, msg: String) {
         checkMaxFile(context)
-        val file = File(context.filesDir, "app-log.txt")
         if (msg.isNotEmpty()) {
             loggerScope.launch {
                 _logFlow.value= msg
-                file.appendText(formatter.format(Date()) + ":${LogLevel.INFO.value} $msg" + "\n")
+                getLogFile(context).appendText(formatter.format(Date()) + ":${LogLevel.INFO.value} $msg" + "\n")
             }
         }
     }
@@ -94,11 +100,10 @@ object AppLogger {
     @JvmStatic
     fun writeVLog(context: Context, msg: String) {
         checkMaxFile(context)
-        val file = File(context.filesDir, "app-log.txt")
         if (msg.isNotEmpty()) {
             loggerScope.launch {
                 _logFlow.value= msg
-                file.appendText(formatter.format(Date()) + ":${LogLevel.VERBOSE.value} $msg" + "\n")
+                getLogFile(context).appendText(formatter.format(Date()) + ":${LogLevel.VERBOSE.value} $msg" + "\n")
             }
         }
     }
@@ -107,7 +112,7 @@ object AppLogger {
     @JvmStatic
     suspend fun readLogs(context: Context): String {
         checkMaxFile(context)
-        val file = File(context.filesDir, "app-log.txt")
+        val file= getLogFile(context)
         if (!file.exists()) {
             withContext(Dispatchers.IO) {
                 file.createNewFile()
@@ -118,14 +123,14 @@ object AppLogger {
 
     @JvmStatic
     suspend fun clearLogs(context: Context) {
-        val file = File(context.filesDir, "app-log.txt")
+        val file = getLogFile(context)
         _logFlow.value= "clear"
         loggerScope.async { file.writeText("") }.await()
     }
 
     private fun checkMaxFile(context: Context) {
         loggerScope.launch{
-            val file = File(context.filesDir, "app-log.txt")
+            val file = getLogFile(context)
 
             if (file.exists()) {
                 val fileSizeInBytes = file.length()
