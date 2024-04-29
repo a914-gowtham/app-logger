@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     fun postRun(){
         handler.removeCallbacks(runnable)
-        handler.postDelayed(runnable,1000)
+//        handler.postDelayed(runnable,1000)
     }
 
     val handler= Handler(Looper.getMainLooper())
