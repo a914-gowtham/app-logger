@@ -24,7 +24,7 @@ dependencyResolutionManagement {
 
 // app level build.gradle
 dependencies {
-   implementation 'com.github.a914-gowtham:app-logger:1.0.0'
+   implementation 'com.github.a914-gowtham:app-logger:1.0.2'
 }
 ```
 
