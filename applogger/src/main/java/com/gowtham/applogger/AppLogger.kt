@@ -23,11 +23,13 @@ object AppLogger {
 
     private val loggerScope = CoroutineScope(Dispatchers.IO)
 
-    private var maxSize: Int = 5
+    private var maxSize: Int = 10
 
     private val _logFlow = MutableStateFlow("")
     val logFlow: StateFlow<String> = _logFlow
     private var logFile: File? = null
+
+    private var logPreference: LogPreference?= null
 
 
     @JvmStatic
@@ -37,6 +39,12 @@ object AppLogger {
 
     @JvmStatic
     fun writeLog(context: Context, msg: String) {
+        if(logPreference==null){
+            logPreference= LogPreference(context)
+        }
+        if (!logPreference!!.isLogEnabled()){
+            return
+        }
         checkMaxFile(context)
         if (msg.isNotEmpty()) {
             dispatcher.dispatch(Dispatchers.IO) {
@@ -58,6 +66,12 @@ object AppLogger {
 
     @JvmStatic
     fun writeWLog(context: Context, msg: String) {
+        if(logPreference==null){
+            logPreference= LogPreference(context)
+        }
+        if (!logPreference!!.isLogEnabled()){
+            return
+        }
         checkMaxFile(context)
         if (msg.isNotEmpty()) {
             dispatcher.dispatch(Dispatchers.IO) {
@@ -69,6 +83,12 @@ object AppLogger {
 
     @JvmStatic
     fun writeDLog(context: Context, msg: String) {
+        if(logPreference==null){
+            logPreference= LogPreference(context)
+        }
+        if (!logPreference!!.isLogEnabled()){
+            return
+        }
         checkMaxFile(context)
         if (msg.isNotEmpty()) {
             dispatcher.dispatch(Dispatchers.IO) {
@@ -80,6 +100,12 @@ object AppLogger {
 
     @JvmStatic
     fun writeELog(context: Context, msg: String) {
+        if(logPreference==null){
+            logPreference= LogPreference(context)
+        }
+        if (!logPreference!!.isLogEnabled()){
+            return
+        }
         checkMaxFile(context)
         if (msg.isNotEmpty()) {
             dispatcher.dispatch(Dispatchers.IO) {
@@ -91,6 +117,12 @@ object AppLogger {
 
     @JvmStatic
     fun writeILog(context: Context, msg: String) {
+        if(logPreference==null){
+            logPreference= LogPreference(context)
+        }
+        if (!logPreference!!.isLogEnabled()){
+            return
+        }
         checkMaxFile(context)
         if (msg.isNotEmpty()) {
             dispatcher.dispatch(Dispatchers.IO) {
@@ -101,6 +133,12 @@ object AppLogger {
 
     @JvmStatic
     fun writeVLog(context: Context, msg: String) {
+        if(logPreference==null){
+            logPreference= LogPreference(context)
+        }
+        if (!logPreference!!.isLogEnabled()){
+            return
+        }
         checkMaxFile(context)
         if (msg.isNotEmpty()) {
             dispatcher.dispatch(Dispatchers.IO) {

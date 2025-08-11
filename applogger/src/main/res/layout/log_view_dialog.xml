@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:paddingHorizontal="12dp"
@@ -13,20 +14,21 @@
         <LinearLayout
             android:id="@+id/view_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
 
             <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/live_switch"
+                android:id="@+id/enable_log"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/live_log" />
+                android:text="@string/enable_logging" />
 
             <TextView
                 android:id="@+id/txt_entries"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="0 entries"/>
+                android:text="0 entries" />
 
 
             <View
@@ -35,19 +37,22 @@
                 android:layout_weight="1" />
 
 
-            <TextView
-                android:id="@+id/txt_copy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Save file" />
+            <ImageView
+                android:id="@+id/img_save"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_save"
+                android:layout_marginEnd="4dp"
+                app:tint="?android:attr/textColorPrimary" />
 
-            <TextView
-                android:id="@+id/txt_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/clear" />
+            <ImageView
+                android:id="@+id/img_delete"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_delete"
+                app:tint="?android:attr/textColorPrimary" />
 
         </LinearLayout>
 

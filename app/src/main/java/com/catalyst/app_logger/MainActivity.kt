@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnILog.setOnClickListener(this)
         btnELog.setOnClickListener(this)
         btnShowLog.setOnClickListener(this)
-//        handler.postDelayed(runnable,1000)
+        handler.postDelayed(runnable,200)
     }
 
     private val runnable= Runnable {
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btnShowLogs -> {
-                val logViewer = LogViewer(liveLog = false)
+                val logViewer = LogViewer()
                 logViewer.show(supportFragmentManager, LogViewer.TAG)
             }
         }

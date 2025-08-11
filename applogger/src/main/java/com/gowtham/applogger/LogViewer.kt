@@ -35,13 +35,13 @@ import java.util.Date
 import java.util.Locale
 
 
-class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
+class LogViewer : BottomSheetDialogFragment() {
 
     private lateinit var listLog: RecyclerView
-    private lateinit var txtClear: TextView
-    private lateinit var txtCopy: TextView
+    private lateinit var imgClear: ImageView
+    private lateinit var imgSave: ImageView
     private lateinit var txtEntries: TextView
-    private lateinit var liveLogSwitch: SwitchMaterial
+    private lateinit var enableLogSwitch: SwitchMaterial
     private lateinit var imageScrollBtm: ImageView
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyView: View
@@ -67,18 +67,16 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         listLog = view.findViewById(R.id.list_log)
-        txtClear = view.findViewById(R.id.txt_clear)
-        txtCopy = view.findViewById(R.id.txt_copy)
-        liveLogSwitch = view.findViewById(R.id.live_switch)
+        imgClear = view.findViewById(R.id.img_delete)
+        imgSave = view.findViewById(R.id.img_save)
+        enableLogSwitch = view.findViewById(R.id.enable_log)
         imageScrollBtm = view.findViewById(R.id.img_scroll_btm)
         progressBar = view.findViewById(R.id.progressbar)
         emptyView = view.findViewById(R.id.empty_view)
         txtEntries = view.findViewById(R.id.txt_entries)
 
         initAdapter()
-        if (liveLog) {
-            handler.postDelayed(entryCountRunnable, 0)
-        }
+        handler.postDelayed(entryCountRunnable, 0)
         loadData()
         listLog.addOnScrollListener(scrollLister)
         setLiveLogSwitchListener()
@@ -86,16 +84,13 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
     }
 
     private fun loadData() {
-        if (liveLog) {
-            handler.removeCallbacks(autoScrollRunnable)
-            handler.postDelayed(autoScrollRunnable, 0)
-        } else {
-            lifecycleScope.launch {
-                val logs = getChunkedList()
-                withContext(Dispatchers.Main) {
-                    logAdapter.submitLogList(logs)
-                    handleEmptyState(logs)
-                }
+        handler.removeCallbacks(autoScrollRunnable)
+        handler.postDelayed(autoScrollRunnable, 0)
+        lifecycleScope.launch {
+            val logs = getChunkedList()
+            withContext(Dispatchers.Main) {
+                logAdapter.submitLogList(logs)
+                handleEmptyState(logs)
             }
         }
     }
@@ -124,7 +119,7 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
 
-            if (liveLog && !recyclerView.canScrollVertically(1)) {
+            if (!recyclerView.canScrollVertically(1)) {
                 handler.removeCallbacks(autoScrollRunnable)
                 handler.postDelayed(autoScrollRunnable, 200)
             }
@@ -133,38 +128,30 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            if (liveLog && dy < 0) {
+            if (dy < 0) {
                 handler.removeCallbacks(autoScrollRunnable)
             }
         }
     }
 
     private fun setLiveLogSwitchListener() {
-        liveLogSwitch.isChecked = liveLog
-        liveLogSwitch.setOnCheckedChangeListener { _, enabled ->
-            liveLog = enabled
-            if (enabled) {
-                handler.removeCallbacks(autoScrollRunnable)
-                handler.postDelayed(entryCountRunnable, 100)
-                handler.postDelayed(autoScrollRunnable, 100)
-            } else {
-                handler.removeCallbacks(entryCountRunnable)
-                handler.removeCallbacks(autoScrollRunnable)
-            }
+        val logPreference= LogPreference(requireContext())
+        enableLogSwitch.isChecked = logPreference.isLogEnabled()
+        enableLogSwitch.setOnCheckedChangeListener { _, enabled ->
+            logPreference.setLogEnabled(enabled)
         }
     }
 
     private fun setUpClickedListeners() {
 
-        txtClear.setOnClickListener {
+        imgClear.setOnClickListener {
             lifecycleScope.launch {
                 AppLogger.clearLogs(requireContext())
                 loadData()
             }
         }
-        txtCopy.apply {
+        imgSave.apply {
             setOnClickListener {
-
                 if (Util.hasPublicWritePermission(context)) {
                     storeLogFile()
                 } else {
@@ -185,9 +172,7 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
     }
 
     private fun scrollToEnd() {
-        if (liveLog) {
-            postCall()
-        }
+        postCall()
         listLog.scrollToPosition(logAdapter.currentList.lastIndex)
     }
 
@@ -243,19 +228,18 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
                     fileUri?.let { requireContext().contentResolver.openOutputStream(it) }
                 outputStream?.write(logs.toByteArray())
                 outputStream?.close()
+                showFileStoreAnimation()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            showFileStoreAnimation()
 
         }
     }
 
     private suspend fun showFileStoreAnimation() {
         withContext(Dispatchers.Main) {
-            txtCopy.setTextAnimation("Saved to downloads..") {
-                txtCopy.setTextAnimation("Save file") {
-
+            imgSave.startSaveAnimation(R.drawable.ic_done) {
+                imgSave.startSaveAnimation(R.drawable.ic_save) {
                 }
             }
         }
@@ -298,7 +282,7 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (liveLog) {
+        if (!listLog.canScrollVertically(1)) {
             handler.postDelayed(entryCountRunnable, REFRESH_DELAY)
             handler.postDelayed(autoScrollRunnable, REFRESH_DELAY)
         }
@@ -326,13 +310,13 @@ class LogViewer(var liveLog: Boolean) : BottomSheetDialogFragment() {
 
 }
 
-fun TextView.setTextAnimation(
-    text: String,
+fun ImageView.startSaveAnimation(
+    iconRes: Int,
     duration: Long = 400,
     completion: (() -> Unit)? = null
 ) {
     fadOutAnimation(duration) {
-        this.text = text
+        setImageDrawable(context.getDrawable(iconRes))
         fadInAnimation(duration) {
             completion?.let {
                 it()

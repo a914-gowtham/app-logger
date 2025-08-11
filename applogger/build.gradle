@@ -12,7 +12,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.gowtham.applogger'
                 artifactId = 'applogger'
-                version =  '1.0.3'
+                version =  '1.0.4'
             }
         }
     }
@@ -25,8 +25,6 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
